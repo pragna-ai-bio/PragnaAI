@@ -257,6 +257,21 @@ document.addEventListener("DOMContentLoaded", function () {
           // Send recorded audio to backend predict endpoint
           (async function uploadAndPredict() {
             try {
+              const resultBox = document.getElementById("analysis-result");
+              const resultValueEl = resultBox.querySelector(".result-value");
+              const resultNoteEl = resultBox.querySelector(".result-note");
+
+              // Show loading state
+              resultBox.style.display = "block";
+              resultValueEl.textContent = "Analyzing…";
+              resultValueEl.style.color = "var(--text-muted)";
+              resultNoteEl.textContent =
+                "Please wait while we analyze your voice recording.";
+
+              if (spinnerEl) spinnerEl.style.display = "block";
+              if (statusEl) statusEl.innerText = "Analyzing audio...";
+
+              // Send audio
               const formData = new FormData();
               formData.append("file", audioBlob, "recording.webm");
 
@@ -268,66 +283,54 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
               );
 
-              if (!resp.ok) {
-                throw new Error("Server returned " + resp.status);
-              }
+              if (!resp.ok) throw new Error("Server returned " + resp.status);
 
-              const data = await resp.json();
-              // data = { label: "...", score: number }
+              const data = await resp.json(); 
 
-              const resultBox = document.getElementById("analysis-result");
-              const resultValueEl = resultBox.querySelector(".result-value");
-              const resultNoteEl = resultBox.querySelector(".result-note");
+              console.log("data.score", data.score);
+              console.log("data.label", data.label);
 
-              // Convert score (0–1) to % if needed
-              const percentage = Math.round(data.score * 100);
+              const percentage = (data.score * 100).toFixed(1); 
 
-              // Update dynamic percentage
               resultValueEl.textContent = `${percentage}%`;
 
-              // Set dynamic note based on label
+              const normalized = (data.label || "").trim().toLowerCase();
               let note = "";
 
-              const label = data.label?.toLowerCase() || "";
-
-              if (label.includes("likely")) {
+              if (normalized === "likely") {
                 resultValueEl.style.color = "red";
                 note =
-                  "Your voice analysis indicates a higher likelihood of Parkinson's-related vocal biomarkers. Please consult a medical professional for confirmation.";
-              } else if (label.includes("moderate")) {
+                  "Your voice analysis indicates a higher likelihood of Parkinson's-related vocal biomarkers. Please consult a medical professional.";
+              } else if (normalized === "moderate") {
                 resultValueEl.style.color = "orange";
                 note =
-                  "Your voice analysis indicates a moderate presence of vocal biomarkers associated with Parkinson's. Further evaluation is suggested.";
-              } else {
+                  "Your voice analysis indicates a moderate presence of vocal biomarkers associated with Parkinson's. Further evaluation is recommended.";
+              } else if (normalized === "unlikely") {
                 resultValueEl.style.color = "green";
                 note =
                   "Your voice analysis indicates no significant vocal biomarkers related to Parkinson's disease.";
+              } else {
+                resultValueEl.style.color = "green";
+                note =
+                  "Your voice analysis does not show significant indicators.";
               }
 
               resultNoteEl.textContent = note;
-
-              // Show the result block
-              resultBox.style.display = "block";
 
               if (statusEl) statusEl.innerText = "Done!";
             } catch (err) {
               console.error("Error uploading audio:", err);
 
               const resultBox = document.getElementById("analysis-result");
-              const resultValueEl = resultBox?.querySelector(".result-value");
-              const resultNoteEl = resultBox?.querySelector(".result-note");
+              const resultValueEl = resultBox.querySelector(".result-value");
+              const resultNoteEl = resultBox.querySelector(".result-note");
 
-              if (statusEl) statusEl.innerText = "Error sending audio!";
-              if (resultValueEl) {
-                resultValueEl.textContent = "Error";
-                resultValueEl.style.color = "red";
-              }
-              if (resultNoteEl) {
-                resultNoteEl.textContent =
-                  "There was a problem analyzing your audio.";
-              }
+              resultValueEl.textContent = "Error";
+              resultValueEl.style.color = "red";
+              resultNoteEl.textContent =
+                "There was a problem analyzing your audio.";
 
-              if (resultBox) resultBox.style.display = "block";
+              if (statusEl) statusEl.innerText = "Error!";
             } finally {
               if (spinnerEl) spinnerEl.style.display = "none";
             }
