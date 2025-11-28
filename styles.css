@@ -992,3 +992,45 @@ body {
     font-size: 2rem;
   }
 }
+
+/* ====== Voice Diagnosis List Boxes ====== */
+
+.voice-diagnosis-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 30px auto;
+  
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+}
+
+.voice-diagnosis-section ul li {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 12px 18px;
+  border-radius: 12px;
+  font-size: 1.05rem;
+  color: var(--text-light);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  
+  transition: all 0.25s ease;
+  min-width: 250px;
+  max-width: 300px;
+
+  text-align: center;
+}
+
+/* Hover Effect */
+.voice-diagnosis-section ul li:hover {
+  background: rgba(255, 215, 0, 0.12);
+  border-color: rgba(255, 215, 0, 0.4);
+  transform: translateY(-4px);
+}
+
+/* Smaller screens */
+@media (max-width: 500px) {
+  .voice-diagnosis-section ul li {
+    min-width: 100%;
+  }
+}
