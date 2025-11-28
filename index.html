@@ -6,538 +6,7 @@
     <title>PragnaAI - Early Cancer Diagnosis Vision</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary-color: #1a73e8;
-            --secondary-color: #34a853;
-            --accent-color: #fbbc05;
-            --text-color: #333;
-            --text-muted: #666;
-            --bg-light: #f5f7fa;
-            --bg-white: #f8fafc;
-            --header-bg: #1a1a1a;
-            --border-color: #e0e0e0;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s ease;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            line-height: 1.6;
-            color: var(--text-color);
-            background-color: var(--bg-white);
-        }
-
-        .content-wrapper {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* Header Styles */
-        .header {
-            background-color: var(--header-bg);
-            box-shadow: var(--shadow);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 20px;
-        }
-
-        .logo {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--primary-color);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 30px;
-        }
-
-        .nav-link {
-            text-decoration: none;
-            color: white;
-            font-weight: 500;
-            transition: var(--transition);
-            position: relative;
-        }
-
-        .nav-link:hover, .nav-link.active {
-            color: var(--primary-color);
-        }
-
-        .nav-link.active::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background-color: var(--primary-color);
-        }
-
-        .mobile-menu-toggle {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: white;
-        }
-
-        .mobile-nav-links {
-            display: none;
-            flex-direction: column;
-            padding: 10px 20px;
-            background-color: var(--header-bg);
-        }
-
-        .mobile-nav-link {
-            padding: 10px 0;
-            text-decoration: none;
-            color: white;
-            font-weight: 500;
-            border-bottom: 1px solid #333;
-        }
-
-        .mobile-nav-link:last-child {
-            border-bottom: none;
-        }
-
-        .mobile-nav-link.active {
-            color: var(--primary-color);
-        }
-
-        /* Page Styles */
-        .page {
-            display: none;
-        }
-
-        .page.active {
-            display: block;
-        }
-
-        /* Hero Section */
-        .hero-section {
-            background: linear-gradient(135deg, #1a73e8 0%, #6c8ef5 100%);
-            color: white;
-            padding: 100px 0;
-            text-align: center;
-        }
-
-        .tagline-container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .tagline {
-            font-size: 2.5rem;
-            font-weight: 600;
-            line-height: 1.3;
-        }
-
-        .tagline-emphasis {
-            color: var(--accent-color);
-            font-weight: 700;
-        }
-
-        /* Vision Section */
-        .vision-section {
-            padding: 80px 0;
-            background-color: var(--bg-light);
-        }
-
-        .section-title {
-            font-size: 2rem;
-            text-align: center;
-            margin-bottom: 50px;
-            color: var(--primary-color);
-        }
-
-        .vision-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-        }
-
-        .vision-point {
-            display: flex;
-            gap: 20px;
-            align-items: flex-start;
-        }
-
-        .vision-icon {
-            background-color: var(--primary-color);
-            color: white;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            font-size: 24px;
-        }
-
-        .vision-text h3 {
-            margin-bottom: 10px;
-            color: var(--primary-color);
-        }
-
-        /* Meaning Section */
-        .meaning-section {
-            padding: 80px 0;
-        }
-
-        .meaning-title {
-            font-size: 2rem;
-            text-align: center;
-            margin-bottom: 20px;
-            color: var(--primary-color);
-        }
-
-        .meaning-subtitle {
-            text-align: center;
-            font-style: italic;
-            margin-bottom: 30px;
-            color: var(--text-muted);
-        }
-
-        .meaning-content {
-            max-width: 800px;
-            margin: 0 auto;
-            text-align: center;
-            font-size: 1.1rem;
-            line-height: 1.8;
-        }
-
-        .highlight {
-            color: var(--primary-color);
-            font-weight: 600;
-        }
-
-        /* About Section */
-        .about-section {
-            padding: 80px 0;
-        }
-
-        .about-content {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .about-text-block {
-            margin-bottom: 40px;
-        }
-
-        .about-text-block h3 {
-            margin-bottom: 15px;
-            color: var(--primary-color);
-        }
-
-        .about-text-block p {
-            line-height: 1.7;
-        }
-
-        /* Research Section */
-        .research-section {
-            padding: 60px 0;
-            background-color: var(--bg-light);
-        }
-
-        .research-title {
-            font-size: 1.8rem;
-            text-align: center;
-            margin-bottom: 30px;
-            color: var(--primary-color);
-        }
-
-        .research-content {
-            max-width: 900px;
-            margin: 0 auto;
-            line-height: 1.7;
-        }
-
-        /* Terms Section */
-        .terms-section {
-            padding: 80px 0;
-        }
-
-        .terms-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-        }
-
-        .term-card {
-            background-color: white;
-            border-radius: 8px;
-            padding: 25px;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-        }
-
-        .term-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .term-card h3 {
-            margin-bottom: 15px;
-            color: var(--primary-color);
-        }
-
-        /* Demo Sections */
-        .demo-sections {
-            padding: 80px 0;
-        }
-
-        .demo-link-section, .voice-diagnosis-section {
-            background-color: white;
-            border-radius: 12px;
-            padding: 40px;
-            margin-bottom: 40px;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-        }
-
-        .demo-link-section:hover, .voice-diagnosis-section:hover {
-            transform: translateY(-5px);
-        }
-
-        .demo-title {
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-            color: var(--primary-color);
-        }
-
-        .demo-description {
-            margin-bottom: 25px;
-            line-height: 1.7;
-        }
-
-        .demo-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background-color: var(--primary-color);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-weight: 500;
-            transition: var(--transition);
-        }
-
-        .demo-btn:hover {
-            background-color: #0d5bb9;
-            transform: translateY(-2px);
-        }
-
-        /* Voice Diagnosis Styling - Enhanced to match cancer detection */
-        .voice-diagnosis-section {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border-left: 5px solid #6c757d;
-        }
-
-        .voice-diagnosis-section .section-title {
-            color: #6c757d;
-            text-align: left;
-            margin-bottom: 20px;
-        }
-
-        .voice-diagnosis-section .demo-btn {
-            background-color: #6c757d;
-        }
-
-        .voice-diagnosis-section .demo-btn:hover {
-            background-color: #5a6268;
-        }
-
-        /* Voice Page Hero */
-        .voice-page-hero {
-            background: linear-gradient(135deg, #6c757d 0%, #adb5bd 100%);
-            color: white;
-            padding: 100px 0;
-            text-align: center;
-        }
-
-        .voice-tagline {
-            font-size: 2.5rem;
-            font-weight: 600;
-            line-height: 1.3;
-        }
-
-        .voice-tagline-emphasis {
-            color: var(--accent-color);
-            font-weight: 700;
-        }
-
-        /* Voice Controls */
-        .voice-diagnosis-content {
-            padding: 40px 0;
-        }
-
-        .voice-controls {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-        }
-
-        .voice-btn {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 6px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .voice-btn:hover:not(:disabled) {
-            background-color: #0d5bb9;
-        }
-
-        .voice-btn:disabled {
-            background-color: #cccccc;
-            cursor: not-allowed;
-        }
-
-        .recording-indicator {
-            display: none;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 20px;
-            color: #d9534f;
-            font-weight: 500;
-        }
-
-        .recording-dot {
-            width: 12px;
-            height: 12px;
-            background-color: #d9534f;
-            border-radius: 50%;
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
-        }
-
-        .audio-player {
-            width: 100%;
-            margin-bottom: 20px;
-        }
-
-        .analysis-result {
-            background-color: white;
-            border-radius: 8px;
-            padding: 25px;
-            margin: 30px 0;
-            box-shadow: var(--shadow);
-            text-align: center;
-        }
-
-        .result-title {
-            margin-bottom: 15px;
-            color: var(--primary-color);
-        }
-
-        .result-value {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--secondary-color);
-            margin-bottom: 15px;
-        }
-
-        .result-note {
-            line-height: 1.7;
-        }
-
-        .graph-title {
-            font-size: 1.3rem;
-            margin: 30px 0 15px;
-            color: var(--primary-color);
-        }
-
-        .graph-container {
-            background-color: white;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 30px;
-            box-shadow: var(--shadow);
-        }
-
-        .graph-canvas {
-            width: 100%;
-            height: 300px;
-        }
-
-        .research-disclaimer {
-            background-color: #fff3cd;
-            border: 1px solid #ffeaa7;
-            border-radius: 8px;
-            padding: 20px;
-            margin-top: 30px;
-            color: #856404;
-        }
-
-        /* Footer */
-        .footer-text {
-            text-align: center;
-            padding: 30px 20px;
-            background-color: var(--bg-light);
-            color: var(--text-muted);
-            font-size: 0.9rem;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-
-            .mobile-menu-toggle {
-                display: block;
-            }
-
-            .mobile-nav-links.active {
-                display: flex;
-            }
-
-            .tagline, .voice-tagline {
-                font-size: 1.8rem;
-            }
-
-            .vision-point {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .voice-controls {
-                justify-content: center;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <!-- Header -->
@@ -576,7 +45,7 @@
         <!-- Vision Section - Now directly below hero -->
         <section class="vision-section">
             <div class="content-wrapper">
-                <h2 class="section-title">Vision of Early Disease Diagnosis</h2>
+                <h2 class="section-title">Vision of Early Cancer Diagnosis</h2>
                 
                 <div class="vision-content">
                     <div class="vision-point">
@@ -591,21 +60,11 @@
                     
                     <div class="vision-point">
                         <div class="vision-icon">
-                            <i class="fas fa-microphone"></i>
-                        </div>
-                        <div class="vision-text">
-                            <h3>Voice-Assisted Diagnosis</h3>
-                            <p>Our innovative voice analysis technology detects subtle vocal biomarkers associated with Parkinson's disease and other neurological conditions, enabling early intervention through non-invasive screening.</p>
-                        </div>
-                    </div>
-                    
-                    <div class="vision-point">
-                        <div class="vision-icon">
                             <i class="fas fa-robot"></i>
                         </div>
                         <div class="vision-text">
                             <h3>AI-Powered Predictive Analysis</h3>
-                            <p>Our multi-agent AI system analyzes molecular vibration patterns and vocal biomarkers, providing accurate disease probability assessments with interpretable reasoning for medical professionals.</p>
+                            <p>Our multi-agent AI system analyzes molecular vibration patterns in lactic acid, providing accurate cancer probability assessments with interpretable reasoning for medical professionals.</p>
                         </div>
                     </div>
                     
@@ -615,7 +74,17 @@
                         </div>
                         <div class="vision-text">
                             <h3>Proactive Healthcare Intervention</h3>
-                            <p>By detecting diseases at their earliest stages, PragnaAI enables proactive treatment strategies that significantly improve patient outcomes and survival rates across multiple conditions.</p>
+                            <p>By detecting cancer at its earliest metabolic stages, PragnaAI enables proactive treatment strategies that significantly improve patient outcomes and survival rates.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="vision-point">
+                        <div class="vision-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="vision-text">
+                            <h3>Accessible Cancer Screening</h3>
+                            <p>Our technology aims to make early cancer detection more accessible, affordable, and non-invasive, transforming how we approach preventive healthcare worldwide.</p>
                         </div>
                     </div>
                 </div>
@@ -628,7 +97,7 @@
                 <div class="meaning-subtitle">From Sanskrit: प्रज्ञा (Prajñā)</div>
                 <div class="meaning-content">
                     <p><span class="highlight">Pragna</span> embodies the essence of <span class="highlight">transcendent wisdom</span>, <span class="highlight">intuitive understanding</span>, and <span class="highlight">profound insight</span> that goes beyond conventional knowledge.</p>
-                    <p>In our context, PragnaAI represents the <span class="highlight">intelligence that perceives what the eyes cannot see</span> - detecting the subtle molecular signatures and vocal biomarkers of disease before they manifest as physical symptoms.</p>
+                    <p>In our context, PragnaAI represents the <span class="highlight">intelligence that perceives what the eyes cannot see</span> - detecting the subtle molecular signatures of disease before they manifest as physical symptoms.</p>
                 </div>
             </section>
         </div>
@@ -642,30 +111,23 @@
                 
                 <div class="about-content">
                     <div class="about-text-block">
-                        <h3>The Critical Challenge: Late Disease Diagnosis</h3>
-                        <p>Traditional disease detection methods often identify conditions only after significant progression, when treatment options are limited and outcomes decline dramatically. This diagnostic delay represents one of the most significant challenges in modern medicine, affecting millions of patients worldwide each year.</p>
+                        <h3>The Critical Challenge: Late Cancer Diagnosis</h3>
+                        <p>Traditional cancer detection methods often identify malignancies only after significant progression, when treatment options are limited and survival rates decline dramatically. This diagnostic delay represents one of the most significant challenges in modern oncology, affecting millions of patients worldwide each year.</p>
                     </div>
                     
                     <div class="about-text-block">
                         <h3>Our Pioneering Research Focus</h3>
-                        <p>PragnaAI is revolutionizing disease detection by focusing on the earliest metabolic alterations in cells and subtle vocal changes, long before physical symptoms manifest. Our research centers on analyzing molecular vibrations in lactic acid and vocal biomarkers associated with neurological conditions.</p>
-                    </div>
-                    
-                    <!-- NEW: Voice Diagnosis Section in About -->
-                    <div class="about-text-block">
-                        <h3>Voice-Assisted Diagnosis Research</h3>
-                        <p>In addition to our cancer detection research, PragnaAI is pioneering voice-assisted diagnosis for neurological conditions. Our voice analysis technology focuses on detecting subtle vocal biomarkers associated with Parkinson's disease and other neurological disorders.</p>
-                        <p>By analyzing frequency patterns, vocal tremor, and speech characteristics, we can identify early indicators of neurological changes that may precede clinical diagnosis by years. This non-invasive approach complements our molecular detection methods, creating a comprehensive diagnostic platform.</p>
+                        <p>PragnaAI is revolutionizing cancer detection by focusing on the earliest metabolic alterations in cells, long before physical tumors form. Our research centers on analyzing molecular vibrations in lactic acid - a key biomarker of the Warburg effect, where cancer cells fundamentally alter their metabolism to favor glycolysis even in oxygen-rich environments.</p>
                     </div>
                     
                     <div class="about-text-block">
                         <h3>Transformative Technology Approach</h3>
-                        <p>We've developed a groundbreaking approach that combines advanced photoacoustic spectroscopy with sophisticated multi-agent AI systems. This enables us to detect subtle molecular changes that precede disease formation by months or even years, providing an unprecedented window for early intervention and dramatically improved patient outcomes.</p>
+                        <p>We've developed a groundbreaking approach that combines advanced photoacoustic spectroscopy with sophisticated multi-agent AI systems. This enables us to detect subtle molecular changes that precede tumor formation by months or even years, providing an unprecedented window for early intervention and dramatically improved patient outcomes.</p>
                     </div>
                     
                     <div class="about-text-block">
                         <h3>Potential Impact on Global Healthcare</h3>
-                        <p>By detecting diseases at their earliest stages rather than their physical manifestation, our technology has the potential to increase early detection rates for many conditions by 40-60%. This represents a paradigm shift from reactive treatment to proactive prevention, potentially transforming many diseases from life-threatening conditions to manageable ones.</p>
+                        <p>By detecting cancer at its metabolic inception rather than its physical manifestation, our technology has the potential to increase 5-year survival rates for many cancer types by 40-60%. This represents a paradigm shift from reactive treatment to proactive prevention, potentially transforming cancer from a life-threatening disease to a manageable condition.</p>
                     </div>
                 </div>
             </section>
@@ -673,12 +135,9 @@
             <section class="research-section">
                 <h2 class="research-title">Scientific Foundation</h2>
                 <div class="research-content">
-                    <p>Our research builds upon established scientific principles that disease processes cause detectable changes at molecular and physiological levels. For cancer, we focus on metabolic reprogramming known as the Warburg effect. For neurological conditions, we analyze vocal biomarkers that reflect underlying neurological changes.</p>
-                    <p>PragnaAI's innovation lies in detecting these changes through the analysis of <span class="highlight">molecular vibrations</span> using advanced photoacoustic spectroscopy and <span class="highlight">vocal frequency patterns</span> through sophisticated audio analysis. Each molecule and vocal pattern has characteristic signatures that serve as unique fingerprints, allowing precise identification and quantification.</p>
-                    <p>Our multi-agent AI system then interprets these signatures, distinguishing between normal activity and the distinctive patterns associated with early-stage disease processes. This approach enables detection at the molecular and physiological level, providing a critical lead time that traditional diagnostic methods cannot match.</p>
-                    
-                    <!-- NEW: Voice Diagnosis Scientific Foundation -->
-                    <p>For voice-assisted diagnosis, we leverage the established correlation between neurological conditions and vocal changes. Parkinson's disease specifically affects the basal ganglia, leading to characteristic changes in voice including reduced volume, monotonic pitch, and vocal tremor. Our AI models analyze these subtle acoustic features to detect early indicators of neurological impairment.</p>
+                    <p>Our research builds upon the established scientific principle that cancer cells undergo metabolic reprogramming known as the Warburg effect. This phenomenon causes malignant cells to consume glucose at an accelerated rate and produce excessive lactic acid, even in the presence of oxygen.</p>
+                    <p>PragnaAI's innovation lies in detecting these metabolic changes through the analysis of <span class="highlight">lactic acid molecular vibrations</span> using advanced photoacoustic spectroscopy. Each molecule vibrates at characteristic frequencies that serve as unique fingerprints, allowing precise identification and quantification.</p>
+                    <p>Our multi-agent AI system then interprets these molecular signatures, distinguishing between normal metabolic activity and the distinctive patterns associated with early-stage carcinogenesis. This approach enables detection at the molecular level, providing a critical lead time that traditional imaging and biopsy methods cannot match.</p>
                 </div>
             </section>
             
@@ -703,18 +162,17 @@
                     
                     <div class="term-card">
                         <h3>Multi-Agent AI System</h3>
-                        <p>Our specialized artificial intelligence architecture where multiple AI agents collaboratively analyze different aspects of molecular and vocal data, providing comprehensive diagnostic assessments with transparent reasoning.</p>
-                    </div>
-                    
-                    <!-- NEW: Voice Diagnosis Terms -->
-                    <div class="term-card">
-                        <h3>Vocal Biomarkers</h3>
-                        <p>Subtle changes in voice characteristics including frequency, amplitude, and timing that can indicate neurological conditions like Parkinson's disease, often appearing years before motor symptoms.</p>
+                        <p>Our specialized artificial intelligence architecture where multiple AI agents collaboratively analyze different aspects of molecular data, providing comprehensive diagnostic assessments with transparent reasoning.</p>
                     </div>
                     
                     <div class="term-card">
-                        <h3>Acoustic Analysis</h3>
-                        <p>The process of extracting and analyzing features from voice recordings to detect patterns associated with specific health conditions, enabling non-invasive early detection of neurological disorders.</p>
+                        <h3>Early Metabolic Detection</h3>
+                        <p>The paradigm-shifting approach of identifying cancer through fundamental changes in cellular metabolism rather than waiting for physical tumor growth, enabling intervention at the earliest possible stage.</p>
+                    </div>
+                    
+                    <div class="term-card">
+                        <h3>Warburg Effect</h3>
+                        <p>A fundamental characteristic of cancer cells where they preferentially produce energy through glycolysis followed by lactic acid fermentation, even when oxygen is abundantly available.</p>
                     </div>
                 </div>
             </section>
@@ -734,18 +192,10 @@
                     </a>
                 </section>
                 
-                <!-- Voice Diagnosis Section - Enhanced -->
+                <!-- Voice Diagnosis Section -->
                 <section class="voice-diagnosis-section">
                     <h2 class="section-title">Voice Assisted Parkinson's Disease Diagnosis</h2>
-                    <p class="demo-description">Experience our innovative voice analysis technology for Parkinson's disease research. This demo leverages models trained on the UCI "Parkinson Speech Dataset with Multiple Types of Sound Recordings" to analyze speech signals and detect subtle vocal biomarkers associated with neurological conditions.</p>
-                    <p class="demo-description">Our voice analysis focuses on detecting micro-tremors, frequency variations, and speech pattern changes that may indicate early-stage Parkinson's disease, often before visible motor symptoms appear. The system analyzes multiple acoustic parameters including:</p>
-                    <ul style="margin-left: 20px; margin-bottom: 20px;">
-                        <li>Fundamental frequency variations (jitter)</li>
-                        <li>Amplitude variations (shimmer)</li>
-                        <li>Harmonic-to-noise ratio</li>
-                        <li>Vocal tremor patterns</li>
-                        <li>Speech rate and rhythm</li>
-                    </ul>
+                    <p class="demo-description">For Parkinson's disease research. It leverages models trained on the UCI "Parkinson Speech Dataset with Multiple Types of Sound Recordings" to analyze speech signals and detect subtle vocal biomarkers.</p>
                     <a href="#" class="demo-btn" id="voice-demo-btn">
                         Launch Voice Diagnosis <i class="fas fa-microphone"></i>
                     </a>
@@ -761,7 +211,7 @@
             <div class="hero-content">
                 <div class="tagline-container">
                     <h1 class="voice-tagline">
-                        "Voice Analysis for <span class="voice-tagline-emphasis">Parkinson's</span> Disease Research"
+                        "Voice Analysis for <span class="voice-tagline-emphasis">Parkinson's Disease Research</span>"
                     </h1>
                 </div>
             </div>
@@ -808,7 +258,7 @@
                     <div class="research-disclaimer">
                         <strong>THIS METHOD OF DIAGNOSIS IS UNDER RESEARCH AND DEVELOPMENT BY PragnaAI</strong>
                         <br><br>
-                        The voice analysis technology demonstrated here is currently in experimental stages and should not be used for medical diagnosis. Our research focuses on detecting subtle frequency changes in voice patterns that may correlate with early-stage neurological biomarkers.
+                        The voice analysis technology demonstrated here is currently in experimental stages and should not be used for medical diagnosis. Our research focuses on detecting subtle frequency changes in voice patterns that may correlate with early-stage cancer biomarkers.
                     </div>
                 </div>
             </section>
@@ -817,204 +267,9 @@
     
     <div class="footer-text">
         Email: pragna.ai.bio@gmail.com<br>
-        © 2025 PragnaAI - Transforming Early Disease Detection
+        © 2025 PragnaAI - Transforming Early Cancer Detection
     </div>
 
-    <script>
-        // Page Navigation
-        document.addEventListener('DOMContentLoaded', function() {
-            const navLinks = document.querySelectorAll('.nav-link, .mobile-nav-link');
-            const pages = document.querySelectorAll('.page');
-            const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
-            const mobileNavLinks = document.getElementById('mobile-nav-links');
-            const voiceDemoBtn = document.getElementById('voice-demo-btn');
-            
-            // Navigation functionality
-            navLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const targetPage = this.getAttribute('data-page');
-                    
-                    // Update active nav link
-                    navLinks.forEach(navLink => navLink.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    // Show target page
-                    pages.forEach(page => {
-                        page.classList.remove('active');
-                        if (page.id === `${targetPage}-page`) {
-                            page.classList.add('active');
-                        }
-                    });
-                    
-                    // Close mobile menu if open
-                    mobileNavLinks.classList.remove('active');
-                });
-            });
-            
-            // Mobile menu toggle
-            mobileMenuToggle.addEventListener('click', function() {
-                mobileNavLinks.classList.toggle('active');
-            });
-            
-            // Voice demo button
-            voiceDemoBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                // Update nav links
-                navLinks.forEach(navLink => navLink.classList.remove('active'));
-                document.querySelector('[data-page="demo"]').classList.add('active');
-                
-                // Show voice page
-                pages.forEach(page => page.classList.remove('active'));
-                document.getElementById('voice-page').classList.add('active');
-            });
-            
-            // Voice recording functionality
-            const recordBtn = document.getElementById('record-btn');
-            const stopBtn = document.getElementById('stop-btn');
-            const playBtn = document.getElementById('play-btn');
-            const recordingIndicator = document.getElementById('recording-indicator');
-            const audioPlayer = document.getElementById('audio-player');
-            const status = document.getElementById('status');
-            const spinner = document.getElementById('spinner');
-            const result = document.getElementById('result');
-            const analysisResult = document.getElementById('analysis-result');
-            
-            let mediaRecorder;
-            let audioChunks = [];
-            
-            recordBtn.addEventListener('click', async function() {
-                try {
-                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                    mediaRecorder = new MediaRecorder(stream);
-                    
-                    mediaRecorder.ondataavailable = function(event) {
-                        audioChunks.push(event.data);
-                    };
-                    
-                    mediaRecorder.onstop = function() {
-                        const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-                        const audioUrl = URL.createObjectURL(audioBlob);
-                        audioPlayer.src = audioUrl;
-                        audioPlayer.style.display = 'block';
-                        
-                        // Enable play button
-                        playBtn.disabled = false;
-                        
-                        // Show analysis result after a delay
-                        setTimeout(() => {
-                            analysisResult.style.display = 'block';
-                            // Draw a simple graph
-                            drawVoiceGraph();
-                        }, 1500);
-                    };
-                    
-                    audioChunks = [];
-                    mediaRecorder.start();
-                    
-                    // Update UI
-                    recordBtn.disabled = true;
-                    stopBtn.disabled = false;
-                    recordingIndicator.style.display = 'flex';
-                    status.textContent = 'Recording... Speak for at least 10 seconds for best results.';
-                    result.textContent = '';
-                    analysisResult.style.display = 'none';
-                } catch (err) {
-                    console.error('Error accessing microphone:', err);
-                    status.textContent = 'Error accessing microphone. Please check permissions.';
-                }
-            });
-            
-            stopBtn.addEventListener('click', function() {
-                if (mediaRecorder && mediaRecorder.state === 'recording') {
-                    mediaRecorder.stop();
-                    
-                    // Stop all tracks
-                    mediaRecorder.stream.getTracks().forEach(track => track.stop());
-                    
-                    // Update UI
-                    recordBtn.disabled = false;
-                    stopBtn.disabled = true;
-                    recordingIndicator.style.display = 'none';
-                    status.textContent = 'Recording stopped. Analyzing...';
-                    
-                    // Show spinner
-                    spinner.style.display = 'block';
-                    
-                    // Hide spinner after analysis
-                    setTimeout(() => {
-                        spinner.style.display = 'none';
-                        status.textContent = 'Analysis complete.';
-                    }, 2000);
-                }
-            });
-            
-            playBtn.addEventListener('click', function() {
-                audioPlayer.play();
-            });
-            
-            // Function to draw a simple voice graph
-            function drawVoiceGraph() {
-                const canvas = document.getElementById('voice-graph');
-                const ctx = canvas.getContext('2d');
-                
-                // Set canvas dimensions
-                canvas.width = canvas.offsetWidth;
-                canvas.height = canvas.offsetHeight;
-                
-                // Clear canvas
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                
-                // Draw grid
-                ctx.strokeStyle = '#e0e0e0';
-                ctx.lineWidth = 1;
-                
-                // Vertical lines
-                for (let x = 0; x < canvas.width; x += 50) {
-                    ctx.beginPath();
-                    ctx.moveTo(x, 0);
-                    ctx.lineTo(x, canvas.height);
-                    ctx.stroke();
-                }
-                
-                // Horizontal lines
-                for (let y = 0; y < canvas.height; y += 30) {
-                    ctx.beginPath();
-                    ctx.moveTo(0, y);
-                    ctx.lineTo(canvas.width, y);
-                    ctx.stroke();
-                }
-                
-                // Draw voice waveform simulation
-                ctx.strokeStyle = '#1a73e8';
-                ctx.lineWidth = 2;
-                ctx.beginPath();
-                
-                const centerY = canvas.height / 2;
-                const amplitude = 80;
-                
-                for (let x = 0; x < canvas.width; x++) {
-                    // Create a simulated voice waveform with some noise
-                    const noise = Math.random() * 10 - 5;
-                    const y = centerY + amplitude * Math.sin(x / 20) * Math.sin(x / 100) + noise;
-                    
-                    if (x === 0) {
-                        ctx.moveTo(x, y);
-                    } else {
-                        ctx.lineTo(x, y);
-                    }
-                }
-                
-                ctx.stroke();
-                
-                // Draw frequency markers
-                ctx.fillStyle = '#34a853';
-                ctx.font = '12px Poppins';
-                ctx.fillText('Frequency Analysis', 10, 20);
-                ctx.fillText('Normal Range', 10, canvas.height - 10);
-            }
-        });
-    </script>
+    <script src="scripts.js"></script>
 </body>
 </html>
