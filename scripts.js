@@ -234,7 +234,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             const formData = new FormData();
                             formData.append('file', audioBlob, 'recording.webm');
 
-                            const resp = await fetch("https://pragnic-voice-analyser-github-io.onrender.com/predict", {
+                            const resp = await fetch("https://pragnaai.onrender.com/predict", {
                                 method: "POST",
                                 body: formData
                             });

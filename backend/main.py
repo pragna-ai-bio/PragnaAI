@@ -24,7 +24,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "https://pragna-ai-bio.github.io",
-        "https://pragnic-voice-analyser-github-io.onrender.com",
+        "https://pragnaai.onrender.com",
         "*"
     ],
     allow_credentials=True,
