@@ -109,6 +109,8 @@ document.addEventListener("DOMContentLoaded", function () {
   let decodedAudioBuffer = null;
   let fullWaveformPeaks = null; // [{min, max}, ...] per pixel column
   let fullWaveformSampleRate = 0;
+  // Track current graph state
+  let currentGraphState = "empty"; // "empty", "recording", "full-waveform", "playback"
 
   // Initialize graph
   if (graphCanvas) {
@@ -136,7 +138,16 @@ document.addEventListener("DOMContentLoaded", function () {
     // Update on window resize
     window.addEventListener("resize", () => {
       updateCanvasSize();
-      drawEmptyGraph();
+      // Redraw based on current state
+      if (currentGraphState === "empty") {
+        drawEmptyGraph();
+      } else if (currentGraphState === "full-waveform") {
+        drawFullWaveform();
+      } else if (currentGraphState === "recording") {
+        // Will be redrawn by animation loop
+      } else if (currentGraphState === "playback") {
+        // Will be redrawn by animation loop
+      }
     });
   }
 
@@ -152,6 +163,10 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function startRecording() {
+    currentGraphState = "recording";
+    clearGraph();
+    drawRealTimeGraph();
+
     navigator.mediaDevices
       .getUserMedia({ audio: true })
       .then((stream) => {
@@ -285,12 +300,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
               if (!resp.ok) throw new Error("Server returned " + resp.status);
 
-              const data = await resp.json(); 
+              const data = await resp.json();
 
               console.log("data.score", data.score);
               console.log("data.label", data.label);
 
-              const percentage = (data.score * 100).toFixed(1); 
+              const percentage = (data.score * 100).toFixed(1);
 
               resultValueEl.textContent = `${percentage}%`;
 
@@ -345,6 +360,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Ensure canvas is sized and start drawing real-time graph while recording
         if (typeof updateCanvasSize === "function") updateCanvasSize();
+        currentGraphState = "recording";
         drawRealTimeGraph();
       })
       .catch((err) => {
@@ -356,6 +372,9 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function stopRecording() {
+    currentGraphState = "full-waveform";
+    clearGraph();
+
     if (mediaRecorder && mediaRecorder.state !== "inactive") {
       mediaRecorder.stop();
       recordBtn.disabled = false;
@@ -374,6 +393,7 @@ document.addEventListener("DOMContentLoaded", function () {
       // Stop real-time graph animation
       if (animationId) {
         cancelAnimationFrame(animationId);
+        animationId = null;
       }
 
       // Close audio context
@@ -381,10 +401,16 @@ document.addEventListener("DOMContentLoaded", function () {
         audioContext.close();
         audioContext = null;
       }
+
+      // Update graph state - will be updated to "full-waveform" when decoding completes
+      currentGraphState = "full-waveform";
     }
   }
 
   function playRecording() {
+    currentGraphState = "playback";
+    clearGraph();
+
     // Use the playback analysis routine so user gesture both plays and starts analyser
     startPlaybackAnalysis();
   }
@@ -430,6 +456,8 @@ document.addEventListener("DOMContentLoaded", function () {
       audioPlayer
         .play()
         .then(() => {
+          currentGraphState = "playback";
+
           function drawPlaybackWaveform() {
             if (!graphCtx) return;
 
@@ -448,11 +476,7 @@ document.addEventListener("DOMContentLoaded", function () {
             graphCtx.fillStyle = "#fff";
             graphCtx.font = "16px Arial";
             graphCtx.textAlign = "center";
-            graphCtx.fillText(
-              "Photoacoustic Voice Waveform (Playback)",
-              width / 2,
-              15
-            );
+            graphCtx.fillText("Voice Waveform (Playback)", width / 2, 15);
 
             const centerY = (height - 50) / 2 + 20;
 
@@ -528,6 +552,9 @@ document.addEventListener("DOMContentLoaded", function () {
               playbackDataArray = null;
               playbackSource = null;
               playbackAnimationId = null;
+              // Return to full waveform view after playback ends
+              currentGraphState = "full-waveform";
+              drawFullWaveform();
             }
           }
 
@@ -544,6 +571,9 @@ document.addEventListener("DOMContentLoaded", function () {
             playbackDataArray = null;
             playbackSource = null;
             playbackAnimationId = null;
+            // Return to full waveform view after playback ends
+            currentGraphState = "full-waveform";
+            drawFullWaveform();
             audioPlayer.removeEventListener("ended", onEnded);
           });
         })
@@ -558,8 +588,6 @@ document.addEventListener("DOMContentLoaded", function () {
       drawPhotoacousticGraphFromRecording();
     }
   }
-
-  // playAnalyseBtn removed — play button now starts analysis via `playRecording` binding
 
   function drawEmptyGraph() {
     if (!graphCtx) return;
@@ -585,7 +613,7 @@ document.addEventListener("DOMContentLoaded", function () {
     graphCtx.fillStyle = "#999";
     graphCtx.font = "14px Arial";
     graphCtx.textAlign = "center";
-    graphCtx.fillText("Frequency (Hz)", width / 2, height - 5);
+    graphCtx.fillText("Time", width / 2, height - 5);
     graphCtx.save();
     graphCtx.translate(15, height / 2);
     graphCtx.rotate(-Math.PI / 2);
@@ -596,12 +624,14 @@ document.addEventListener("DOMContentLoaded", function () {
     graphCtx.fillStyle = "#fff";
     graphCtx.font = "16px Arial";
     graphCtx.textAlign = "center";
-    graphCtx.fillText("Photoacoustic Voice Spectrum", width / 2, 15);
+    graphCtx.fillText("Voice Waveform", width / 2, 15);
 
     // Draw "No Data" message
     graphCtx.fillStyle = "#666";
     graphCtx.font = "18px Arial";
     graphCtx.fillText("Record voice to see analysis", width / 2, height / 2);
+
+    currentGraphState = "empty";
   }
 
   function drawRealTimeGraph() {
@@ -663,6 +693,55 @@ document.addEventListener("DOMContentLoaded", function () {
     animationId = requestAnimationFrame(draw);
   }
 
+  function drawFullWaveform() {
+    if (!graphCtx) return;
+    if (!decodedAudioBuffer && !fullWaveformPeaks) {
+      drawPhotoacousticGraphFromRecording();
+      return;
+    }
+
+    const width =
+      graphCanvas.clientWidth || graphCanvas.getBoundingClientRect().width;
+    const height =
+      graphCanvas.clientHeight || graphCanvas.getBoundingClientRect().height;
+
+    graphCtx.fillStyle = "rgba(10, 10, 10, 0.8)";
+    graphCtx.fillRect(0, 0, width, height);
+
+    graphCtx.fillStyle = "#fff";
+    graphCtx.font = "16px Arial";
+    graphCtx.textAlign = "center";
+    graphCtx.fillText("Recorded Voice Waveform", width / 2, 15);
+
+    const pixelWidth = Math.max(1, Math.floor(width - 70));
+    let peaks = fullWaveformPeaks;
+    if (!peaks && decodedAudioBuffer) {
+      peaks = computePeaksForWidth(decodedAudioBuffer, pixelWidth);
+      fullWaveformPeaks = peaks;
+    }
+
+    if (!peaks || !peaks.length) return;
+
+    const centerY = (height - 50) / 2 + 20;
+    const sliceWidth = (width - 70) / peaks.length;
+
+    graphCtx.beginPath();
+    graphCtx.lineWidth = 1.5;
+    graphCtx.strokeStyle = "rgba(255, 215, 0, 0.95)";
+    for (let i = 0; i < peaks.length; i++) {
+      const p = peaks[i];
+      const x = 50 + i * sliceWidth;
+      const yTop = centerY + (-p.max * (height - 80)) / 2;
+      const yBottom = centerY + (-p.min * (height - 80)) / 2;
+      // draw vertical line for min->max
+      graphCtx.moveTo(x, yTop);
+      graphCtx.lineTo(x, yBottom);
+    }
+    graphCtx.stroke();
+
+    currentGraphState = "full-waveform";
+  }
+
   function drawPhotoacousticGraphFromRecording() {
     if (!graphCtx) return;
 
@@ -678,7 +757,7 @@ document.addEventListener("DOMContentLoaded", function () {
     graphCtx.fillStyle = "#fff";
     graphCtx.font = "16px Arial";
     graphCtx.textAlign = "center";
-    graphCtx.fillText("Photoacoustic Simulated Waveform", width / 2, 15);
+    graphCtx.fillText("Voice Waveform", width / 2, 15);
 
     // Draw a simulated time-domain waveform (sum of harmonics) as a sine-like graph
     const dataPoints = 1024;
@@ -714,6 +793,17 @@ document.addEventListener("DOMContentLoaded", function () {
     graphCtx.lineTo(50, centerY + (height - 80) / 2);
     graphCtx.closePath();
     graphCtx.fill();
+
+    currentGraphState = "full-waveform";
+  }
+
+  function clearGraph() {
+    if (!graphCtx || !graphCanvas) return;
+    const width =
+      graphCanvas.clientWidth || graphCanvas.getBoundingClientRect().width;
+    const height =
+      graphCanvas.clientHeight || graphCanvas.getBoundingClientRect().height;
+    graphCtx.clearRect(0, 0, width, height);
   }
 
   // Utility: compute per-column peaks (min/max) for a decoded AudioBuffer
@@ -740,53 +830,5 @@ document.addEventListener("DOMContentLoaded", function () {
       peaks[i] = { min, max };
     }
     return peaks;
-  }
-
-  // Draw full decoded waveform using cached peaks if available
-  function drawFullWaveform() {
-    if (!graphCtx) return;
-    if (!decodedAudioBuffer && !fullWaveformPeaks) {
-      drawPhotoacousticGraphFromRecording();
-      return;
-    }
-
-    const width =
-      graphCanvas.clientWidth || graphCanvas.getBoundingClientRect().width;
-    const height =
-      graphCanvas.clientHeight || graphCanvas.getBoundingClientRect().height;
-
-    graphCtx.fillStyle = "rgba(10, 10, 10, 0.8)";
-    graphCtx.fillRect(0, 0, width, height);
-
-    graphCtx.fillStyle = "#fff";
-    graphCtx.font = "16px Arial";
-    graphCtx.textAlign = "center";
-    graphCtx.fillText("Full Waveform", width / 2, 15);
-
-    const pixelWidth = Math.max(1, Math.floor(width - 70));
-    let peaks = fullWaveformPeaks;
-    if (!peaks && decodedAudioBuffer) {
-      peaks = computePeaksForWidth(decodedAudioBuffer, pixelWidth);
-      fullWaveformPeaks = peaks;
-    }
-
-    if (!peaks || !peaks.length) return;
-
-    const centerY = (height - 50) / 2 + 20;
-    const sliceWidth = (width - 70) / peaks.length;
-
-    graphCtx.beginPath();
-    graphCtx.lineWidth = 1.5;
-    graphCtx.strokeStyle = "rgba(255, 215, 0, 0.95)";
-    for (let i = 0; i < peaks.length; i++) {
-      const p = peaks[i];
-      const x = 50 + i * sliceWidth;
-      const yTop = centerY + (-p.max * (height - 80)) / 2;
-      const yBottom = centerY + (-p.min * (height - 80)) / 2;
-      // draw vertical line for min->max
-      graphCtx.moveTo(x, yTop);
-      graphCtx.lineTo(x, yBottom);
-    }
-    graphCtx.stroke();
   }
 });
