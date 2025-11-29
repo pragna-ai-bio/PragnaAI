@@ -488,9 +488,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // PHOTOACOUSTIC DEMO BUTTON (same logic if needed)
     document.getElementById("photoacoustic-demo-btn").addEventListener("click", function (e) {
-        e.preventDefault();
-        pages.forEach(p => p.classList.remove("active"));
-        document.getElementById("demo-page").classList.add("active");
-    });
+      e.preventDefault();
+      window.location.href = "pas_demo.html"; 
+  });
+
 
 });
