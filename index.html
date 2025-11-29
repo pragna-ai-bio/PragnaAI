@@ -198,7 +198,7 @@
                 <section class="demo-link-section">
                     <h2 class="demo-title">Photoacoustic Spectroscopy Demo</h2>
                         <p class="demo-description">Explore our interactive prototype demonstrating how PragnaAI analyzes lactic acid molecular vibrations for early cancer detection through AI-powered photoacoustic diagnosis.</p>
-                    <a href="pas_demo.html" class="demo-btn" target="_blank">
+                    <a href="#" class="demo-btn" id="photoacoustic-demo-btn">
                         Launch Photoacoustic Demo <i class="fas fa-external-link-alt"></i>
                     </a>
                 </section>
@@ -237,6 +237,11 @@
         </section>
         
         <div class="content-wrapper">
+            <!-- IMPORTANT NOTICE ADDED HERE -->
+            <div class="important-notice">
+                <strong>IMPORTANT:</strong> This voice analysis works only under ideal conditions. Please record in silent environment with your mic close (10-20cm) to your mouth. Crowd noise, talking, echoes, or music can cause incorrect results.
+            </div>
+            
             <section class="voice-diagnosis-section">
                 <div class="voice-diagnosis-content">
                     <div class="voice-controls">
@@ -259,7 +264,6 @@
                     <audio id="audio-player" class="audio-player" controls style="display: none;"></audio>
                     <p id="status" style="margin-top:12px; color: var(--text-muted);"></p>
                     <div id="spinner" style="display:none; margin-top:8px; width:24px; height:24px; border:4px solid #3a506b; border-top:4px solid var(--primary-yellow); border-radius:50%; animation: spin 1s linear infinite;"></div>
-                    <h3 id="result" style="margin-top:12px;"></h3>
                     
                     <div class="analysis-result" id="analysis-result" style="display: none;">
                         <h3 class="result-title">Voice Analysis Result</h3>
