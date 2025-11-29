@@ -451,3 +451,46 @@ document.addEventListener("DOMContentLoaded", function () {
     graphCtx.fillText("Harmonics: 2nd, 3rd, 4th, 5th order", 60, 80);
   }
 });
+
+// Page navigation
+document.addEventListener("DOMContentLoaded", function () {
+    const navLinks = document.querySelectorAll(".nav-link, .mobile-nav-link");
+    const pages = document.querySelectorAll(".page");
+
+    navLinks.forEach(link => {
+        link.addEventListener("click", function (event) {
+            event.preventDefault();
+
+            const targetPage = this.getAttribute("data-page") + "-page";
+
+            // Remove active class from links
+            navLinks.forEach(l => l.classList.remove("active"));
+            this.classList.add("active");
+
+            // Hide all pages
+            pages.forEach(page => page.classList.remove("active"));
+
+            // Show selected page
+            const selected = document.getElementById(targetPage);
+            if (selected) selected.classList.add("active");
+
+            // Close mobile menu if open
+            document.getElementById("mobile-nav-links").classList.remove("open");
+        });
+    });
+
+    // DEMO → VOICE PAGE BUTTON
+    document.getElementById("voice-demo-btn").addEventListener("click", function (e) {
+        e.preventDefault();
+        pages.forEach(p => p.classList.remove("active"));
+        document.getElementById("voice-page").classList.add("active");
+    });
+
+    // PHOTOACOUSTIC DEMO BUTTON (same logic if needed)
+    document.getElementById("photoacoustic-demo-btn").addEventListener("click", function (e) {
+        e.preventDefault();
+        pages.forEach(p => p.classList.remove("active"));
+        document.getElementById("demo-page").classList.add("active");
+    });
+
+});
