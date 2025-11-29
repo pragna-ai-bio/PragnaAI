@@ -12,24 +12,32 @@ document.addEventListener("DOMContentLoaded", function () {
   // Function to handle navigation
   function handleNavigation(e) {
     e.preventDefault();
-
+  
     // Remove active class from all links and pages
     navLinks.forEach((nav) => nav.classList.remove("active"));
     pages.forEach((page) => page.classList.remove("active"));
-
+  
     // Add active class to clicked link
     this.classList.add("active");
-
-    // Show the corresponding page
-    const pageId = this.getAttribute("data-page") + "-page";
-    document.getElementById(pageId).classList.add("active");
-
-    // Close mobile menu if open
-    mobileNavLinks.classList.remove("active");
-
-    // Scroll to top when switching pages
-    window.scrollTo(0, 0);
+  
+    // Show matching page
+    const pageId = this.dataset.page + "-page";
+    const targetPage = document.getElementById(pageId);
+  
+    if (targetPage) {
+      targetPage.classList.add("active");
+    }
+  
+    // Close mobile nav menu
+    mobileNavLinks.classList.remove("open");
   }
+
+  // Attach navigation to all nav links (desktop + mobile)
+  navLinks.forEach((nav) => {
+    nav.addEventListener("click", handleNavigation);
+  });
+
+
 
   // Add click event to all navigation links
   navLinks.forEach((link) => {
@@ -480,17 +488,17 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // DEMO → VOICE PAGE BUTTON
-    document.getElementById("voice-demo-btn").addEventListener("click", function (e) {
-        e.preventDefault();
-        pages.forEach(p => p.classList.remove("active"));
-        document.getElementById("voice-page").classList.add("active");
+    voiceDemoBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+      pages.forEach((page) => page.classList.remove("active"));
+      document.getElementById("voice-page").classList.add("active");
     });
 
     // PHOTOACOUSTIC DEMO BUTTON (same logic if needed)
     document.getElementById("photoacoustic-demo-btn").addEventListener("click", function (e) {
       e.preventDefault();
       window.location.href = "pas_demo.html"; 
-  });
+    });
 
 
 });
