@@ -801,6 +801,18 @@ body {
   line-height: 1.6;
 }
 
+/* Important Notice Styles */
+.important-notice {
+  background-color: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 20px 0;
+  color: #856404;
+  text-align: center;
+  font-weight: 600;
+}
+
 /* Hidden class for page switching */
 .page {
   display: none;
@@ -999,7 +1011,7 @@ body {
   list-style: none;
   padding: 0;
   margin: 30px auto;
-  
+
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -1013,7 +1025,7 @@ body {
   font-size: 1.05rem;
   color: var(--text-light);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  
+
   transition: all 0.25s ease;
   min-width: 250px;
   max-width: 300px;
