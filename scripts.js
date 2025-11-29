@@ -1,81 +1,72 @@
-// Simple page navigation
 document.addEventListener("DOMContentLoaded", function () {
   const navLinks = document.querySelectorAll(".nav-link, .mobile-nav-link");
   const pages = document.querySelectorAll(".page");
   const mobileMenuToggle = document.getElementById("mobile-menu-toggle");
   const mobileNavLinks = document.getElementById("mobile-nav-links");
   const voiceDemoBtn = document.getElementById("voice-demo-btn");
-  const photoacousticDemoBtn = document.getElementById(
-    "photoacoustic-demo-btn"
-  );
+  const photoacousticDemoBtn = document.getElementById("photoacoustic-demo-btn");
 
-  // Function to handle navigation
+  // -------------------------
+  // NAVIGATION HANDLER
+  // -------------------------
   function handleNavigation(e) {
     e.preventDefault();
-  
-    // Remove active class from all links and pages
+
+    // Remove active state
     navLinks.forEach((nav) => nav.classList.remove("active"));
     pages.forEach((page) => page.classList.remove("active"));
-  
-    // Add active class to clicked link
+
+    // Activate clicked tab
     this.classList.add("active");
-  
-    // Show matching page
+
+    // Show correct page
     const pageId = this.dataset.page + "-page";
     const targetPage = document.getElementById(pageId);
-  
-    if (targetPage) {
-      targetPage.classList.add("active");
-    }
-  
-    // Close mobile nav menu
-    mobileNavLinks.classList.remove("open");
+    if (targetPage) targetPage.classList.add("active");
+
+    // Close mobile nav
+    mobileNavLinks.classList.remove("active");
   }
 
-  // Attach navigation to all nav links (desktop + mobile)
+  // Attach navigation to all nav links
   navLinks.forEach((nav) => {
     nav.addEventListener("click", handleNavigation);
   });
 
-
-
-  // Add click event to all navigation links
-  navLinks.forEach((link) => {
-    link.addEventListener("click", handleNavigation);
-  });
-
-  // Voice demo button navigation
+  // -------------------------
+  // VOICE DEMO BUTTON
+  // -------------------------
   voiceDemoBtn.addEventListener("click", function (e) {
     e.preventDefault();
 
-    // Remove active class from all links and pages
     navLinks.forEach((nav) => nav.classList.remove("active"));
     pages.forEach((page) => page.classList.remove("active"));
 
     // Show voice page
     document.getElementById("voice-page").classList.add("active");
 
-    // Close mobile menu if open
+    // Close mobile menu
     mobileNavLinks.classList.remove("active");
 
-    // Scroll to top
     window.scrollTo(0, 0);
   });
 
-  // Photoacoustic demo button
+  // -------------------------
+  // PHOTOACOUSTIC DEMO
+  // -------------------------
   photoacousticDemoBtn.addEventListener("click", function (e) {
     e.preventDefault();
-    alert(
-      "Photoacoustic demo would launch here. This is a prototype demonstration."
-    );
+    alert("Photoacoustic demo would launch here. This is a prototype demonstration.");
   });
 
-  // Mobile menu toggle
+  // -------------------------
+  // MOBILE MENU TOGGLE
+  // -------------------------
   mobileMenuToggle.addEventListener("click", function () {
     mobileNavLinks.classList.toggle("active");
   });
 
-  // Close mobile menu when clicking outside
+  // Close mobile menu on outside click
   document.addEventListener("click", function (e) {
     if (
       !e.target.closest(".header-content") &&
@@ -85,7 +76,10 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // Voice recording functionality
+  // -------------------------
+  // VOICE RECORDING SECTION
+  // -------------------------
+
   const recordBtn = document.getElementById("record-btn");
   const stopBtn = document.getElementById("stop-btn");
   const playBtn = document.getElementById("play-btn");
@@ -104,17 +98,15 @@ document.addEventListener("DOMContentLoaded", function () {
   let graphCtx;
   let animationId;
 
-  // Initialize graph
+  // Init Graph
   if (graphCanvas) {
     graphCtx = graphCanvas.getContext("2d");
     graphCanvas.width = graphCanvas.offsetWidth;
     graphCanvas.height = graphCanvas.offsetHeight;
-
-    // Draw initial empty graph
     drawEmptyGraph();
   }
 
-  // Check if browser supports media recording
+  // Check browser permission
   if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
     recordBtn.addEventListener("click", startRecording);
     stopBtn.addEventListener("click", stopRecording);
@@ -125,11 +117,13 @@ document.addEventListener("DOMContentLoaded", function () {
       '<i class="fas fa-microphone-slash"></i> Recording Not Supported';
   }
 
+  // -------------------------
+  // START RECORDING
+  // -------------------------
   function startRecording() {
     navigator.mediaDevices
       .getUserMedia({ audio: true })
       .then((stream) => {
-        // Set up audio context for analysis
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
         analyser = audioContext.createAnalyser();
         const source = audioContext.createMediaStreamSource(stream);
@@ -137,7 +131,6 @@ document.addEventListener("DOMContentLoaded", function () {
         analyser.fftSize = 2048;
         dataArray = new Uint8Array(analyser.frequencyBinCount);
 
-        // Set up media recorder
         mediaRecorder = new MediaRecorder(stream);
         audioChunks = [];
 
@@ -151,7 +144,6 @@ document.addEventListener("DOMContentLoaded", function () {
           audioPlayer.src = audioUrl;
           playBtn.disabled = false;
 
-          // Show analysis result
           status.textContent = "Analyzing voice recording...";
           spinner.style.display = "block";
 
@@ -160,12 +152,10 @@ document.addEventListener("DOMContentLoaded", function () {
             analysisResult.style.display = "block";
             status.textContent = "Analysis complete. See results below.";
 
-            // Generate a random result for demo purposes
             const randomResult = Math.floor(Math.random() * 15);
             document.querySelector(".result-value").textContent =
               randomResult + "%";
 
-            // Update the graph
             drawPhotoacousticGraphFromRecording(randomResult);
           }, 3000);
         };
@@ -177,17 +167,16 @@ document.addEventListener("DOMContentLoaded", function () {
         audioPlayer.style.display = "none";
         analysisResult.style.display = "none";
 
-        // Start drawing real-time graph while recording
         drawRealTimeGraph();
       })
-      .catch((err) => {
-        console.error("Error accessing microphone:", err);
-        alert(
-          "Unable to access your microphone. Please check your permissions and try again."
-        );
+      .catch(() => {
+        alert("Unable to access microphone. Please allow permission.");
       });
   }
 
+  // -------------------------
+  // STOP RECORDING
+  // -------------------------
   function stopRecording() {
     if (mediaRecorder && mediaRecorder.state !== "inactive") {
       mediaRecorder.stop();
@@ -196,108 +185,47 @@ document.addEventListener("DOMContentLoaded", function () {
       recordingIndicator.classList.remove("active");
       audioPlayer.style.display = "block";
 
-      // Stop all audio tracks
-      mediaRecorder.stream.getTracks().forEach((track) => track.stop());
+      mediaRecorder.stream.getTracks().forEach((t) => t.stop());
+      if (animationId) cancelAnimationFrame(animationId);
 
-      // Stop real-time graph animation
-      if (animationId) {
-        cancelAnimationFrame(animationId);
-      }
-
-      // Close audio context
-      if (audioContext) {
-        audioContext.close();
-      }
+      if (audioContext) audioContext.close();
     }
   }
 
+  // -------------------------
+  // PLAY RECORDING
+  // -------------------------
   function playRecording() {
     audioPlayer.play();
   }
 
+  // -------------------------
+  // DRAW EMPTY GRAPH (initial)
+  // -------------------------
   function drawEmptyGraph() {
-    if (!graphCtx) return;
-
     const width = graphCanvas.width;
     const height = graphCanvas.height;
 
-    // Clear canvas
     graphCtx.clearRect(0, 0, width, height);
-
-    // Draw axes
-    graphCtx.strokeStyle = "#555";
-    graphCtx.lineWidth = 1;
-    graphCtx.beginPath();
-    graphCtx.moveTo(50, 20);
-    graphCtx.lineTo(50, height - 30);
-    graphCtx.lineTo(width - 20, height - 30);
-    graphCtx.stroke();
-
-    // Draw labels
-    graphCtx.fillStyle = "#999";
-    graphCtx.font = "14px Arial";
-    graphCtx.textAlign = "center";
-    graphCtx.fillText("Frequency (Hz)", width / 2, height - 5);
-    graphCtx.save();
-    graphCtx.translate(15, height / 2);
-    graphCtx.rotate(-Math.PI / 2);
-    graphCtx.fillText("Amplitude", 0, 0);
-    graphCtx.restore();
-
-    // Draw title
-    graphCtx.fillStyle = "#fff";
-    graphCtx.font = "16px Arial";
-    graphCtx.textAlign = "center";
-    graphCtx.fillText("Photoacoustic Voice Spectrum", width / 2, 15);
-
-    // Draw "No Data" message
     graphCtx.fillStyle = "#666";
     graphCtx.font = "18px Arial";
+    graphCtx.textAlign = "center";
     graphCtx.fillText("Record voice to see analysis", width / 2, height / 2);
   }
 
+  // -------------------------
+  // REAL-TIME GRAPH
+  // -------------------------
   function drawRealTimeGraph() {
-    if (!analyser || !graphCtx) return;
-
     const width = graphCanvas.width;
     const height = graphCanvas.height;
 
     function draw() {
-      if (!analyser) return;
-
       analyser.getByteFrequencyData(dataArray);
 
-      // Clear canvas
       graphCtx.fillStyle = "rgba(10, 10, 10, 0.8)";
       graphCtx.fillRect(0, 0, width, height);
 
-      // Draw axes
-      graphCtx.strokeStyle = "#555";
-      graphCtx.lineWidth = 1;
-      graphCtx.beginPath();
-      graphCtx.moveTo(50, 20);
-      graphCtx.lineTo(50, height - 30);
-      graphCtx.lineTo(width - 20, height - 30);
-      graphCtx.stroke();
-
-      // Draw labels
-      graphCtx.fillStyle = "#999";
-      graphCtx.font = "14px Arial";
-      graphCtx.textAlign = "center";
-      graphCtx.fillText("Frequency (Hz)", width / 2, height - 5);
-      graphCtx.save();
-      graphCtx.translate(15, height / 2);
-      graphCtx.rotate(-Math.PI / 2);
-      graphCtx.fillText("Amplitude", 0, 0);
-      graphCtx.restore();
-
-      // Draw title
-      graphCtx.fillStyle = "#fff";
-      graphCtx.font = "16px Arial";
-      graphCtx.textAlign = "center";
-      graphCtx.fillText("Real-time Voice Spectrum (Recording)", width / 2, 15);
-
-      // Draw frequency data
       const barWidth = (width - 70) / dataArray.length;
       graphCtx.fillStyle = "rgba(255, 215, 0, 0.7)";
 
@@ -311,14 +239,13 @@ document.addEventListener("DOMContentLoaded", function () {
         );
       }
 
-      // Continue animation if still recording
       if (mediaRecorder && mediaRecorder.state === "recording") {
         animationId = requestAnimationFrame(draw);
       }
     }
-
     animationId = requestAnimationFrame(draw);
   }
+
 
   function drawPhotoacousticGraphFromRecording(result) {
     if (!graphCtx) return;
