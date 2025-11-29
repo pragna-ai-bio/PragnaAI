@@ -5,9 +5,6 @@
     const mobileMenuToggle = document.getElementById("mobile-menu-toggle");
     const mobileNavLinks = document.getElementById("mobile-nav-links");
     const voiceDemoBtn = document.getElementById("voice-demo-btn");
-    const photoacousticDemoBtn = document.getElementById(
-      "photoacoustic-demo-btn"
-    );
 
     // Function to handle navigation
     function handleNavigation(e) {
@@ -52,14 +49,6 @@
 
       // Scroll to top
       window.scrollTo(0, 0);
-    });
-
-    // Photoacoustic demo button
-    photoacousticDemoBtn.addEventListener("click", function (e) {
-      e.preventDefault();
-      alert(
-        "Photoacoustic demo would launch here. This is a prototype demonstration."
-      );
     });
 
     // Mobile menu toggle
