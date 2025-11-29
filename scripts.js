@@ -73,7 +73,7 @@
     const recordingIndicator = document.getElementById("recording-indicator");
     const audioPlayer = document.getElementById("audio-player");
     const analysisResult = document.getElementById("analysis-result");
-    const graphCanvas = document.getElementById("voice-graph");
+    const graphCanvas = document.getElementById("graph-canvas");
     const status = document.getElementById("status");
     const spinner = document.getElementById("spinner");
 
