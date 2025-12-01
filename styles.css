@@ -8,6 +8,17 @@
 :root {
   --primary-yellow: #ffd700;
   --primary-green: #90ee90;
+  /* Graph styling variables */
+  --graph-bg: rgba(10, 10, 10, 0.8);
+  --graph-axis: #555;
+  --graph-label: #999;
+  --graph-title: #ffffff;
+  --graph-accent: rgba(255, 215, 0, 0.9);
+  --graph-fill: rgba(255, 215, 0, 0.12);
+  --graph-hint: #777;
+  --graph-font-title-size: 16px;
+  --graph-font-label-size: 14px;
+  --graph-font-hint-size: 15px;
   --accent-color: #32cd32;
   --text-white: #ffffff;
   --text-light: #f5f5f5;
