@@ -85,14 +85,25 @@
     let graphCtx;
     let animationId;
 
-    // Initialize graph
-    if (graphCanvas) {
-      graphCtx = graphCanvas.getContext("2d");
-      graphCanvas.width = graphCanvas.offsetWidth;
-      graphCanvas.height = graphCanvas.offsetHeight;
+    function initializeGraph() {
+      if (graphCanvas && !graphCtx) {
+        graphCtx = graphCanvas.getContext("2d");
+        graphCanvas.width = graphCanvas.offsetWidth;
+        graphCanvas.height = graphCanvas.offsetHeight;
 
-      // Draw initial empty graph
-      drawEmptyGraph();
+        // Draw initial empty graph
+        drawEmptyGraph();
+      }
+    }
+
+    const voicePage = document.getElementById("voice-page");
+    if (voicePage) {
+      const observer = new MutationObserver(() => {
+        if (voicePage.classList.contains("active")) {
+          initializeGraph();
+        }
+      });
+      observer.observe(voicePage, { attributes: true, attributeFilter: ["class"] });
     }
 
     // Check if browser supports media recording
